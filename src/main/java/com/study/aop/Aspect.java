@@ -1,6 +1,6 @@
-package com.test.aop;
+package com.study.aop;
 
-import com.test.auth.AuthService;
+import com.study.auth.AuthService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;

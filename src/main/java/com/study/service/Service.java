@@ -1,4 +1,4 @@
-package com.test.service;
+package com.study.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
