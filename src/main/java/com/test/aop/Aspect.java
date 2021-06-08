@@ -29,7 +29,7 @@ public class Aspect {
 
         long begin = System.currentTimeMillis();
 
-        log.info("(test aop)1 = {}", Thread.currentThread().getName());
+        log.info("(test aop)0 = {}", Thread.currentThread().getName());
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
@@ -38,12 +38,18 @@ public class Aspect {
         String message = "data_00213123";
 
         Object object = null;
-        try {
-            authService.process();
-            request.setAttribute("var", message);
 
-            //aop
-            //object = CompletableFuture<ResponseEntity<String>>
+        try {
+            try {
+                authService.process();
+                request.setAttribute("var", message);
+
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                log.info("(test aop)1 = {}", Thread.currentThread().getName());
+            }
+
             object = joinPoint.proceed();
             return object;
 
@@ -52,6 +58,8 @@ public class Aspect {
                 log.info("(test aop)2 = {}", Thread.currentThread().getName());
                 object = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
             }
+            return object;
+
         } finally {
 
             // i want to know respond time.
@@ -69,14 +77,14 @@ public class Aspect {
                     if (exception != null) {
                         //if exists error, i want to return internal_error.
                         log.error("(test aop)5 = {}, elapsed = {} ms", Thread.currentThread().getName(), end);
-                        return ResponseEntity.status(500).body(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+                        return ResponseEntity.status(400).body("sunsh error");
 
                     } else {
                         //if success, i want to return http_status_code, body of completableFuture.
                         log.info("(test aop)6 = {}, elapsed = {} ms", Thread.currentThread().getName(), end);
                         ((CompletableFuture<?>) msg).thenApply(ret -> {
 
-                            ResponseEntity<String> responseEntity = (ResponseEntity<String>)ret;
+                            ResponseEntity<String> responseEntity = (ResponseEntity<String>) ret;
 
                             log.info("(test aop)7 = {}, elapsed = {} ms", Thread.currentThread().getName(), end);
                             return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
@@ -87,7 +95,6 @@ public class Aspect {
             }
             log.info("(test aop)8 = {}, elapsed = {} ms", Thread.currentThread().getName(), end);
         }
-        return object;
     }
 
     private boolean isCompletableFuture(Object result) {
