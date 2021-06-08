@@ -24,7 +24,7 @@ public class Aspect {
 
     Logger log = LoggerFactory.getLogger(Aspect.class);
 
-    @Around("execution(* com.test.*.*Controller.*(..)) && execution(public * *(..))")
+    @Around("execution(* com.study.*.*Controller.*(..)) && execution(public * *(..))")
     public Object process(final ProceedingJoinPoint joinPoint) throws Throwable {
 
         long begin = System.currentTimeMillis();
