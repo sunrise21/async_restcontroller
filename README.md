@@ -22,7 +22,7 @@
 [2021-06-09 00:14:44.247][INFO ] {http-nio-8080-exec-1} #### >org.springframework.web.context.support.ServletRequestHandledEventServletRequestHandledEvent: url=[/service]; client=[0:0:0:0:0:0:0:1]; method=[GET]; servlet=[dispatcherServlet]; session=[null]; user=[null]; time=[1ms]; status=[OK] <br>
 [2021-06-09 00:14:44.247][INFO ] {pool-2-thread-1} (test aop)6 = pool-2-thread-1, elapsed = 0 ms <br>
  <br>
-<b>3) tomcat thread : http async reponse -> http-nio-8080-exec-2</b>
+<b>3) tomcat thread : async, http response -> http-nio-8080-exec-2</b>
 <br>
 [2021-06-09 00:14:44.247][DEBUG] {<b>http-nio-8080-exec-2</b>} "ASYNC" dispatch for GET "/service", parameters={} <br>
 [2021-06-09 00:14:44.248][DEBUG] {http-nio-8080-exec-2} Resume with async result [<201,created,[]>] <br>
