@@ -11,5 +11,8 @@ public class AuthService {
 
     public void process() {
         log.info("(test1-1) success auth check");
+
+
+        throw new RuntimeException();
     }
 }

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sun.applet.resources.MsgAppletViewer;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.CompletableFuture;
@@ -13,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @RestController
-public class Controller{
+public class Controller {
 
     @Autowired
     Service service;
@@ -29,7 +30,14 @@ public class Controller{
                 () -> {
                     log.info("(test controller)22 async thread = {}", Thread.currentThread().getName());
 
-                    String var = (String)request.getAttribute("var");
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    int a = 1 / 0;
+                    String var = (String) request.getAttribute("var");
                     log.info("(test controller) 22-1 async v1 = {}", var);
 
                     try {
@@ -41,5 +49,14 @@ public class Controller{
 
                     return ResponseEntity.status(201).body("created");
                 }, executor);
+//                                .handle((msg, ex) -> {
+//                                    if(ex != null){
+//                                        log.info("ex != null, msg = {}, exception = {}", msg, ex.toString());
+//                                        return ResponseEntity.status(406).body("error");
+//                                    } else {
+//                                        log.info("msg = {}, exception = {}", msg, ex.toString());
+//                                    }
+//                                    return msg;
+//                                });
     }
 }
