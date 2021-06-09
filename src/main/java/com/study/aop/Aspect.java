@@ -42,26 +42,20 @@ public class Aspect {
         Object object = null;
 
         try {
-            authService.process();
-            request.setAttribute("var", message);
-
-        } catch (Exception e) {
-            log.info("\"(test aop) catch sunsh exception = {}", e.toString());
-
-//            throw e;
-        } finally {
-            //todo 통계 트레이스 request
-            log.info("(test aop) try 1 = {}", Thread.currentThread().getName());
-        }
-
-
-        try {
-            /**** */
-            object = (CompletableFuture<?>) joinPoint.proceed();
-            /**** */
+            try {
+                authService.process();
+                request.setAttribute("var", message);
+            } catch (Exception e) {
+                log.info("\"(test aop) catch sunsh exception = {}", e.toString());
+                throw e;
+            } finally {
+                //todo trace statistics request
+                log.info("(test aop) try 1 = {}", Thread.currentThread().getName());
+            }
+            object = joinPoint.proceed();
 
             log.info("(test aop) try proceed = {}", object.toString());  //java.util.concurrent.CompletableFuture@7c43e5cd[Not completed]
-//            return object;
+            return object;
         } catch (Exception e) {
 
             log.info("\"(test aop)2 catch sunsh exception1 = {}", e.toString());
@@ -77,7 +71,7 @@ public class Aspect {
         } finally {
             // i want to know respond time.
 //            long end = System.currentTimeMillis() - begin;
-            log.info("(test aop) finanly 4 =  {}, {}, {}", Thread.currentThread().getName(),  ((CompletableFuture<?>) object).isDone(), ((CompletableFuture<?>) object).isCompletedExceptionally());
+            log.info("(test aop) finanly 4 =  {}, {}, {}", Thread.currentThread().getName(), ((CompletableFuture<?>) object).isDone(), ((CompletableFuture<?>) object).isCompletedExceptionally());
 
             if (!isCompletableFuture(object)) {
                 //if object is not completableFuture object...
@@ -90,8 +84,8 @@ public class Aspect {
             return ((CompletableFuture<?>) object).whenComplete((o, throwable) -> {
                 long end = System.currentTimeMillis() - begin;
 
-
                 if (null != throwable) {
+                    //todo trace statistics response
                     log.info("(test aop) 774 =  {}, {}, {}, {}", Thread.currentThread().getName(),
                             ((CompletableFuture<?>) finalObject).isDone(), ((CompletableFuture<?>) finalObject).isCancelled(), ((CompletableFuture<?>) finalObject).isCompletedExceptionally());
                     log.error("(test aop) 7741 = {}", throwable.getMessage());
@@ -99,6 +93,7 @@ public class Aspect {
 
                 }
                 if (null != o) {
+                    //todo trace statistics response
                     log.info("(test aop) 775 =  {}, {}, {}, {}", Thread.currentThread().getName(),
                             ((CompletableFuture<?>) finalObject).isDone(), ((CompletableFuture<?>) finalObject).isCancelled(), ((CompletableFuture<?>) finalObject).isCompletedExceptionally());
                     log.info("(test aop) 7751 = {}", o.toString());
